@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ubuntu Services - Track Reports</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .nav {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #3498db;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav a:hover {
+            color: #2c3e50;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .content h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .status-received {
+            background: #fff3cd;
+            color: #856404;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-in_progress {
+            background: #cce5ff;
+            color: #004085;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-resolved {
+            background: #d4edda;
+            color: #155724;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .no-reports {
+            text-align: center;
+            padding: 60px;
+            color: #7f8c8d;
+        }
+        
+        .no-reports a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Ubuntu Services</h1>
+            <p>Community First. Together.</p>
+        </div>
+        
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/report/">Report</a>
+            <a href="/track/">Track</a>
+        </div>
+        
+        <div class="content">
+            <h2>📍 My Reports</h2>
+            
+            {% if reports %}
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Reported</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in reports %}
+                        <tr>
+                            <td>
+                                {% if report.category == 'pothole' %}🕳️
+                                {% elif report.category == 'water' %}💧
+                                {% elif report.category == 'electricity' %}⚡
+                                {% elif report.category == 'waste' %}🗑️
+                                {% endif %}
+                                {{ report.get_category_display }}
+                            </td>
+                            <td>{{ report.location }}</td>
+                            <td>
+                                <span class="status-{{ report.status }}">
+                                    {{ report.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ report.created_at|date:"M d, Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="no-reports">
+                <p>📭 You haven't submitted any reports yet.</p>
+                <a href="/report/">Report an Issue</a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="footer">
+            <p>Ubuntu Services - Building better communities together</p>
+        </div>
+    </div>
+</body>
+</html>
